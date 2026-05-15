@@ -6,8 +6,8 @@
 <title>JOJI — Shift Briefing</title>
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
-body { font-family:Arial,Helvetica,sans-serif; background:#f5f4f0; display:flex; flex-direction:column; align-items:center; padding:20px; gap:32px; }
-.top-bar { width:980px; display:flex; align-items:center; gap:12px; }
+body { font-family:Arial,Helvetica,sans-serif; background:#f5f4f0; display:flex; flex-direction:column; align-items:center; padding:20px; gap:32px; min-width:320px; }
+.top-bar { width:100%; max-width:980px; display:flex; align-items:center; gap:12px; }
 .import-btn { display:inline-flex; align-items:center; gap:7px; background:#7B6FCC; color:#fff; font-size:11px; font-weight:700; padding:6px 16px; border-radius:6px; cursor:pointer; border:none; font-family:Arial,sans-serif; }
 .import-btn:hover { background:#6a5ebc; }
 #csv-upload { display:none; }
@@ -15,7 +15,7 @@ body { font-family:Arial,Helvetica,sans-serif; background:#f5f4f0; display:flex;
 .import-status.ok  { color:#2d7a3a; }
 .import-status.err { color:#c0392b; }
 .top-hint { font-size:10px; color:#999; }
-.sheet { width:980px; background:#fff; border:1px solid #ccc; border-radius:10px; overflow:hidden; }
+.sheet { width:100%; max-width:980px; background:#fff; border:1px solid #ccc; border-radius:10px; overflow:hidden; }
 .hdr { color:#fff; padding:10px 18px; display:flex; justify-content:space-between; align-items:center; }
 .hdr.lunch  { background:#2a5a7c; }
 .hdr.dinner { background:#1e1e1e; }
@@ -25,8 +25,8 @@ body { font-family:Arial,Helvetica,sans-serif; background:#f5f4f0; display:flex;
 .covers-inp::placeholder { color:rgba(255,255,255,0.3); font-weight:400; font-size:11px; }
 .covers-lbl { font-size:9px; color:rgba(255,255,255,0.6); letter-spacing:0.1em; text-transform:uppercase; }
 .shift-badge { font-size:11px; color:rgba(255,255,255,0.8); letter-spacing:0.08em; text-transform:uppercase; font-weight:700; }
-.grid { display:grid; grid-template-columns:1fr 2fr; align-items:start; }
-.left { border-right:1px solid #ddd; }
+.grid { display:grid; grid-template-columns:1fr 2fr; align-items:stretch; }
+.left { border-right:1px solid #ddd; display:flex; flex-direction:column; }
 .sh { font-size:8px; letter-spacing:0.13em; text-transform:uppercase; padding:4px 10px; font-weight:700; }
 .sh.dk  { background:#2d2d2d; color:#fff; }
 .sh.pk  { background:#c96fa5; color:#fff; }
@@ -73,13 +73,72 @@ body { font-family:Arial,Helvetica,sans-serif; background:#f5f4f0; display:flex;
 .ftr.dinner { background:#1e1e1e; }
 .sig { font-size:8px; letter-spacing:0.1em; text-transform:uppercase; color:#777; }
 
-@media print {
+
   body { background:#fff; padding:0; gap:0; }
-  .top-bar { display:none; }
-  .sheet { border:none; border-radius:0; width:100%; page-break-after:always; }
+  .sheet {
+    border:none; border-radius:0;
+    width:100%;
+    page-break-after:always;
+    page-break-inside:avoid;
+  }
   .sheet:last-child { page-break-after:avoid; }
-  .no-print { display:none !important; }
   * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+
+  /* Scale everything down to fit A4 */
+  .hdr { padding:5px 10px; }
+  .venue { font-size:11px; }
+  .shift-badge { font-size:9px; }
+  .covers-lbl { font-size:7px; }
+  .covers-inp { font-size:10px; width:44px; padding:2px 5px; }
+
+  .sh { font-size:6px; padding:2px 7px; letter-spacing:0.08em; }
+
+  .role-lbl { font-size:6px; padding:3px 5px; padding-top:5px; }
+  .s-row { min-height:18px; }
+  .s-name { font-size:8px; padding:2px 4px; width:62px; }
+  .s-time { font-size:7px; padding:2px 3px; width:100px; }
+  .s-note { font-size:6px; padding:2px 3px; width:50px; }
+  .s-brk  { font-size:6px; padding:1px 4px; }
+
+  .whead div { font-size:6px; padding:2px 5px; }
+  .w-row { min-height:18px; }
+  .w-name { font-size:8px; padding:2px 4px; width:60px; }
+  .w-time { font-size:7px; padding:2px 3px; }
+  .w-brk-cell { padding:2px 3px; }
+
+  .nl { font-size:6px; padding:3px 5px; }
+  .note-inp { font-size:8px; padding:3px 5px; }
+  .nb-ta { font-size:8px; padding:4px 6px; min-height:30px; }
+
+  /* Section table */
+  #lsc table, #dsc table { font-size:7px; }
+  #lsc textarea, #dsc textarea { font-size:11px !important; padding:2px 4px !important; min-height:20px !important; }
+  #lsc td, #dsc td { padding:2px 4px !important; }
+  #lsc th, #dsc th { padding:3px 6px !important; font-size:6px !important; }
+
+  .ftr { padding:4px 10px; }
+  .sig { font-size:7px; }
+}
+
+
+
+.left-notes { flex:1; display:flex; flex-direction:column; border-bottom:none; }
+.left-notes textarea { flex:1; width:100%; border:none; outline:none; font-family:Arial,sans-serif; font-size:10px; font-style:italic; color:#1a1a1a; padding:7px 9px; resize:none; background:transparent; display:block; text-align:center; min-height:60px; }
+
+
+
+
+
+.toggle-bar { display:flex; gap:8px; align-items:center; }
+.toggle-btn { padding:6px 20px; border-radius:6px; border:2px solid transparent; font-family:Arial,sans-serif; font-size:12px; font-weight:700; cursor:pointer; letter-spacing:0.05em; transition: all 0.15s; }
+.toggle-btn.lunch  { background:#2a5a7c; color:#fff; border-color:#2a5a7c; }
+.toggle-btn.dinner { background:#1e1e1e; color:#fff; border-color:#1e1e1e; }
+.toggle-btn.both   { background:#7B6FCC; color:#fff; border-color:#7B6FCC; }
+.toggle-btn.inactive { background:#fff; color:#999; border-color:#ddd; }
+
+@media print {
+  .top-bar { display: none !important; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
 </style>
 </head>
@@ -89,11 +148,16 @@ body { font-family:Arial,Helvetica,sans-serif; background:#f5f4f0; display:flex;
   <label class="import-btn" for="csv-upload">📂 Import Deputy CSV</label>
   <input type="file" accept=".csv" id="csv-upload"/>
   <span class="import-status" id="import-status"></span>
-  <span class="top-hint">Lunch &amp; Dinner auto-generated · Cmd+P to print both</span>
+  <div class="toggle-bar">
+    <button class="toggle-btn lunch" onclick="showSheet('lunch')">☀ Lunch</button>
+    <button class="toggle-btn dinner inactive" onclick="showSheet('dinner')">🌙 Dinner</button>
+    <button class="toggle-btn both inactive" onclick="showSheet('both')">Both</button>
+  </div>
+  <button onclick="printActive()" style="margin-left:12px;padding:6px 18px;background:#4a7c59;color:#fff;border:none;border-radius:6px;font-family:Arial,sans-serif;font-size:12px;font-weight:700;cursor:pointer;">🖨 Print PDF</button>
 </div>
 
 <!-- LUNCH -->
-<div class="sheet">
+<div class="sheet" id="sheet-lunch">
   <div class="hdr lunch">
     <div class="venue">JOJI — Shift Briefing <span style="font-size:10px;font-weight:400;opacity:0.6" id="lunch-date-lbl"></span></div>
     <div class="hdr-right">
@@ -112,7 +176,11 @@ body { font-family:Arial,Helvetica,sans-serif; background:#f5f4f0; display:flex;
         <div class="whead"><div>Waiter / Floor</div><div>Break</div></div>
         <div id="l-floor"></div>
       </div>
-      <div class="role-block" style="border-bottom:none"><div class="role-head"><div class="role-lbl">Runners</div><div class="role-rows" id="l-runners"></div></div></div>
+      <div class="role-block"><div class="role-head"><div class="role-lbl">Runners</div><div class="role-rows" id="l-runners"></div></div></div>
+      <div class="left-notes">
+        <div class="sh dk">Notes</div>
+        <textarea placeholder="Additional notes..."></textarea>
+      </div>
     </div>
     <div>
       <div id="lsc"></div>
@@ -124,7 +192,6 @@ body { font-family:Arial,Helvetica,sans-serif; background:#f5f4f0; display:flex;
       <div class="note-row"><div class="nl">Push</div><div><input class="note-inp" type="text"/></div></div>
       <div class="sh bar">Bar Notes</div>
       <div class="note-row"><div class="nl">86</div><div><input class="note-inp" type="text"/></div></div>
-      <div class="note-row"><div class="nl">85</div><div><input class="note-inp" type="text"/></div></div>
       <div class="note-row"><div class="nl">Push</div><div><input class="note-inp" type="text"/></div></div>
       <div class="sh dk">Team Notes</div>
       <textarea class="nb-ta" placeholder="Reminders, upsell focus, updates..." style="min-height:60px;border-bottom:none"></textarea>
@@ -134,7 +201,7 @@ body { font-family:Arial,Helvetica,sans-serif; background:#f5f4f0; display:flex;
 </div>
 
 <!-- DINNER -->
-<div class="sheet">
+<div class="sheet" id="sheet-dinner">
   <div class="hdr dinner">
     <div class="venue">JOJI — Shift Briefing <span style="font-size:10px;font-weight:400;opacity:0.6" id="dinner-date-lbl"></span></div>
     <div class="hdr-right">
@@ -153,7 +220,11 @@ body { font-family:Arial,Helvetica,sans-serif; background:#f5f4f0; display:flex;
         <div class="whead"><div>Waiter / Floor</div><div>Break</div></div>
         <div id="d-floor"></div>
       </div>
-      <div class="role-block" style="border-bottom:none"><div class="role-head"><div class="role-lbl">Runners</div><div class="role-rows" id="d-runners"></div></div></div>
+      <div class="role-block"><div class="role-head"><div class="role-lbl">Runners</div><div class="role-rows" id="d-runners"></div></div></div>
+      <div class="left-notes">
+        <div class="sh dk">Notes</div>
+        <textarea placeholder="Additional notes..."></textarea>
+      </div>
     </div>
     <div>
       <div id="dsc"></div>
@@ -165,7 +236,6 @@ body { font-family:Arial,Helvetica,sans-serif; background:#f5f4f0; display:flex;
       <div class="note-row"><div class="nl">Push</div><div><input class="note-inp" type="text"/></div></div>
       <div class="sh bar">Bar Notes</div>
       <div class="note-row"><div class="nl">86</div><div><input class="note-inp" type="text"/></div></div>
-      <div class="note-row"><div class="nl">85</div><div><input class="note-inp" type="text"/></div></div>
       <div class="note-row"><div class="nl">Push</div><div><input class="note-inp" type="text"/></div></div>
       <div class="sh dk">Team Notes</div>
       <textarea class="nb-ta" placeholder="Reminders, upsell focus, updates..." style="min-height:60px;border-bottom:none"></textarea>
@@ -442,6 +512,119 @@ function initSections(containerId, prefix){
 }
 initSections('lsc','l');
 initSections('dsc','d');
+
+function showSheet(which) {
+  const lunch  = document.getElementById('sheet-lunch');
+  const dinner = document.getElementById('sheet-dinner');
+  const btns   = document.querySelectorAll('.toggle-btn');
+
+  if (which === 'lunch') {
+    lunch.style.display  = '';
+    dinner.style.display = 'none';
+  } else if (which === 'dinner') {
+    lunch.style.display  = 'none';
+    dinner.style.display = '';
+  } else {
+    lunch.style.display  = '';
+    dinner.style.display = '';
+  }
+
+  // Update button states
+  btns.forEach(b => b.classList.add('inactive'));
+  btns.forEach(b => b.classList.remove('lunch','dinner','both'));
+  if (which === 'lunch')  { btns[0].classList.remove('inactive'); btns[0].classList.add('lunch'); }
+  if (which === 'dinner') { btns[1].classList.remove('inactive'); btns[1].classList.add('dinner'); }
+  if (which === 'both')   { btns[2].classList.remove('inactive'); btns[2].classList.add('both'); }
+}
+// Default: show lunch only
+showSheet('lunch');
+
+function printActive() {
+  const lunch  = document.getElementById('sheet-lunch');
+  const dinner = document.getElementById('sheet-dinner');
+  const lunchVisible  = lunch.style.display  !== 'none';
+  const dinnerVisible = dinner.style.display !== 'none';
+
+  // Collect HTML of visible sheets
+  let html = '';
+  if (lunchVisible)  html += lunch.outerHTML;
+  if (dinnerVisible) html += dinner.outerHTML;
+
+  // Get all styles
+  const styles = [...document.querySelectorAll('style')].map(s => s.outerHTML).join('');
+
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+    ${styles}
+    <style>
+      @page { size: A4 portrait; margin: 0; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; box-sizing: border-box; }
+      html, body { margin:0; padding:0; background:#fff; width:210mm; }
+      .top-bar, .no-print, .toggle-bar { display: none !important; }
+      .sheet {
+        width: 210mm;
+        height: 297mm;
+        overflow: hidden;
+        page-break-after: always;
+        break-after: page;
+        border: none !important;
+        border-radius: 0 !important;
+        display: flex;
+        flex-direction: column;
+      }
+      .sheet:last-child { page-break-after: avoid; break-after: avoid; }
+      /* Scale content to fill A4 exactly */
+      .hdr { flex-shrink: 0; padding: 6px 12px; }
+      .venue { font-size: 12px; }
+      .grid {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        min-height: 0;
+      }
+      .left {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .left-notes { flex: 1; }
+      .left-notes textarea { flex: 1; min-height: 0; }
+      /* Right column scrolls content to fill */
+      .grid > div:last-child {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      #lsc, #dsc { flex-shrink: 0; }
+      /* Compress row heights */
+      .sh { padding: 3px 8px; font-size: 7px; }
+      .role-lbl { font-size: 7px; padding: 3px 6px; }
+      .s-row { min-height: 20px; }
+      .s-name { font-size: 9px; width: 65px; padding: 2px 5px; }
+      .s-time { font-size: 8px; width: 100px; padding: 2px 3px; }
+      .s-note { font-size: 7px; width: 52px; }
+      .s-brk  { font-size: 7px; padding: 1px 4px; }
+      .whead div { font-size: 7px; padding: 2px 6px; }
+      .w-row { min-height: 20px; }
+      .w-name { font-size: 9px; width: 65px; }
+      .w-time { font-size: 8px; }
+      .nl { font-size: 7px; padding: 3px 5px; }
+      .note-inp { font-size: 9px; padding: 3px 6px; }
+      .nb-ta { font-size: 9px; padding: 4px 7px; min-height: 35px; }
+      .ftr { flex-shrink: 0; padding: 4px 12px; }
+      .sig { font-size: 7px; }
+      /* Section table */
+      #lsc table, #dsc table { font-size: 7px; }
+      #lsc th, #dsc th { padding: 3px 6px; font-size: 7px; }
+      #lsc td, #dsc td { padding: 2px 4px; }
+      #lsc textarea, #dsc textarea { font-size: 13px !important; padding: 3px 5px !important; }
+    </style>
+  </head><body>${html}</body></html>`);
+  win.document.close();
+  win.focus();
+  setTimeout(() => { win.print(); }, 800);
+}
+
 </script>
 </body>
 </html>
